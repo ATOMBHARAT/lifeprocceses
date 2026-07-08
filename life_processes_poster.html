@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Life Processes: The Big Picture</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Space+Mono:wght@400;700&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #00e676;
+    --cyan: #00e5ff;
+    --orange: #ff6d00;
+    --pink: #f50057;
+    --purple: #d500f9;
+    --yellow: #ffd600;
+    --bg: #050a14;
+    --card: rgba(255,255,255,0.04);
+    --glow-green: 0 0 30px #00e67688, 0 0 60px #00e67622;
+    --glow-cyan: 0 0 30px #00e5ff88, 0 0 60px #00e5ff22;
+    --glow-orange: 0 0 30px #ff6d0088, 0 0 60px #ff6d0022;
+    --glow-pink: 0 0 30px #f5005788, 0 0 60px #f5005722;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: #e8f4f8;
+    font-family: 'Nunito', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── Starfield ── */
+  #stars {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background: radial-gradient(ellipse at 20% 20%, #0d1a2e 0%, #050a14 60%);
+  }
+  .star {
+    position: absolute;
+    border-radius: 50%;
+    background: white;
+    animation: twinkle var(--d) ease-in-out infinite alternate;
+  }
+  @keyframes twinkle { from { opacity: 0.1; transform: scale(1); } to { opacity: 0.9; transform: scale(1.4); } }
+
+  /* ── Floating blobs ── */
+  .blob {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: 0.12;
+    pointer-events: none;
+    z-index: 0;
+    animation: drift var(--t) ease-in-out infinite alternate;
+  }
+  @keyframes drift {
+    from { transform: translate(0,0) scale(1); }
+    to   { transform: translate(var(--dx), var(--dy)) scale(1.1); }
+  }
+
+  /* ── Layout ── */
+  main {
+    position: relative; z-index: 1;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  /* ── Hero Header ── */
+  .hero {
+    text-align: center;
+    margin-bottom: 70px;
+    animation: fadeUp 1s ease both;
+  }
+  .hero .tag {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--cyan);
+    border: 1px solid var(--cyan);
+    padding: 4px 16px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    box-shadow: var(--glow-cyan);
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.4rem, 6vw, 5rem);
+    font-weight: 900;
+    line-height: 1.1;
+    background: linear-gradient(135deg, #fff 0%, var(--cyan) 50%, var(--green) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 16px;
+  }
+  .hero p {
+    font-size: 1.1rem;
+    color: #8ab4cf;
+    max-width: 640px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  /* ── Section Cards ── */
+  .section-card {
+    background: var(--card);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 24px;
+    padding: 44px 40px;
+    margin-bottom: 40px;
+    backdrop-filter: blur(10px);
+    animation: fadeUp 0.8s ease both;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .section-card:hover {
+    transform: translateY(-4px);
+  }
+
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    opacity: 0.7;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    font-weight: 700;
+    margin-bottom: 30px;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ═══════════════════════════════════
+     SECTION 1 – Web of Life Processes
+  ═══════════════════════════════════ */
+  .s1 { border-color: rgba(0,230,118,0.25); box-shadow: 0 0 60px rgba(0,230,118,0.04); }
+  .s1 .section-label { color: var(--green); }
+  .s1 .section-title { color: #a8ffcc; }
+
+  .web-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9;
+    max-height: 520px;
+  }
+  .web-container svg { width: 100%; height: 100%; }
+
+  /* ═══════════════════════════════════
+     SECTION 2 – Autotrophic vs Heterotrophic
+  ═══════════════════════════════════ */
+  .s2 { border-color: rgba(0,229,255,0.25); box-shadow: 0 0 60px rgba(0,229,255,0.04); animation-delay: 0.1s; }
+  .s2 .section-label { color: var(--cyan); }
+  .s2 .section-title { color: #a0f0ff; }
+
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .compare-col {
+    border-radius: 16px;
+    padding: 28px 24px;
+  }
+  .compare-col.auto {
+    background: linear-gradient(135deg, rgba(0,230,118,0.12), rgba(0,230,118,0.04));
+    border: 1px solid rgba(0,230,118,0.3);
+  }
+  .compare-col.hetero {
+    background: linear-gradient(135deg, rgba(255,109,0,0.12), rgba(255,109,0,0.04));
+    border: 1px solid rgba(255,109,0,0.3);
+  }
+  .compare-col h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    margin-bottom: 6px;
+  }
+  .compare-col.auto h3 { color: var(--green); }
+  .compare-col.hetero h3 { color: var(--orange); }
+  .compare-col .emoji-big { font-size: 2.4rem; display: block; margin-bottom: 14px; }
+  .compare-row {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 6px 12px;
+    margin-bottom: 8px;
+    align-items: start;
+  }
+  .compare-row .key {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    opacity: 0.55;
+    text-transform: uppercase;
+    padding-top: 2px;
+  }
+  .compare-row .val { font-size: 0.88rem; line-height: 1.5; color: #c8e8f8; }
+  .compare-divider {
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.15), transparent);
+    display: none;
+  }
+  .hetero-question {
+    margin-top: 28px;
+    background: rgba(245,0,87,0.08);
+    border: 1px solid rgba(245,0,87,0.3);
+    border-radius: 14px;
+    padding: 22px 24px;
+  }
+  .hetero-question h4 {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--pink);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .hetero-question p { font-size: 0.92rem; line-height: 1.7; color: #d0c0c8; }
+
+  /* ═══════════════════════════════════
+     SECTION 3 – Domino Effect
+  ═══════════════════════════════════ */
+  .s3 { border-color: rgba(255,109,0,0.25); box-shadow: 0 0 60px rgba(255,109,0,0.04); animation-delay: 0.2s; }
+  .s3 .section-label { color: var(--orange); }
+  .s3 .section-title { color: #ffbf80; }
+
+  .domino-chain {
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    padding-bottom: 12px;
+  }
+  .domino-wrap {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .domino {
+    width: 160px;
+    border-radius: 14px;
+    padding: 18px 16px;
+    text-align: center;
+    position: relative;
+    transition: transform 0.3s ease;
+    cursor: default;
+  }
+  .domino:hover { transform: rotate(-3deg) scale(1.05); }
+  .domino .d-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    opacity: 0.5;
+    margin-bottom: 6px;
+  }
+  .domino .d-icon { font-size: 2rem; display: block; margin-bottom: 8px; }
+  .domino .d-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+    line-height: 1.2;
+  }
+  .domino .d-text { font-size: 0.72rem; line-height: 1.4; opacity: 0.8; }
+  .domino-arrow {
+    font-size: 1.4rem;
+    color: rgba(255,109,0,0.6);
+    padding: 0 4px;
+    flex-shrink: 0;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:0.4} 50%{opacity:1} }
+
+  .domino-0 { background: linear-gradient(135deg, #1a0a00, #2d1500); border: 1px solid rgba(255,109,0,0.5); }
+  .domino-1 { background: linear-gradient(135deg, #1a0f00, #201500); border: 1px solid rgba(255,214,0,0.4); }
+  .domino-2 { background: linear-gradient(135deg, #001a0d, #001208); border: 1px solid rgba(0,230,118,0.4); }
+  .domino-3 { background: linear-gradient(135deg, #00101a, #000d14); border: 1px solid rgba(0,229,255,0.4); }
+  .domino-4 { background: linear-gradient(135deg, #1a0010, #14000b); border: 1px solid rgba(213,0,249,0.4); }
+  .domino-5 { background: linear-gradient(135deg, #1a0006, #140004); border: 1px solid rgba(245,0,87,0.5); }
+
+  /* ═══════════════════════════════════
+     SECTION 4 – Real World
+  ═══════════════════════════════════ */
+  .s4 { border-color: rgba(213,0,249,0.25); box-shadow: 0 0 60px rgba(213,0,249,0.04); animation-delay: 0.3s; }
+  .s4 .section-label { color: var(--purple); }
+  .s4 .section-title { color: #e8a0ff; }
+
+  .factbox {
+    background: linear-gradient(135deg, rgba(213,0,249,0.08), rgba(0,229,255,0.06));
+    border: 1px solid rgba(213,0,249,0.3);
+    border-radius: 18px;
+    padding: 30px 32px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+  .factbox .did-you {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    line-height: 1;
+    background: linear-gradient(135deg, var(--purple), var(--cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    white-space: nowrap;
+  }
+  .factbox h4 {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--purple);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .factbox p { font-size: 0.95rem; line-height: 1.8; color: #c8d8f0; }
+  .factbox .highlight {
+    color: var(--cyan);
+    font-weight: 700;
+  }
+
+  /* ═══════════════════════════════════
+     SECTION 5 – Curiosity Question
+  ═══════════════════════════════════ */
+  .s5 {
+    border-color: rgba(255,214,0,0.3);
+    box-shadow: 0 0 80px rgba(255,214,0,0.06);
+    text-align: center;
+    animation-delay: 0.4s;
+    background: linear-gradient(135deg, rgba(255,214,0,0.04), rgba(255,109,0,0.04));
+  }
+  .s5 .section-label { color: var(--yellow); }
+  .s5 .section-title { color: #ffe082; margin-bottom: 24px; }
+  .curiosity-q {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.3rem, 3vw, 2.2rem);
+    font-weight: 700;
+    line-height: 1.4;
+    color: #fff8e1;
+    max-width: 820px;
+    margin: 0 auto 20px;
+    text-shadow: 0 0 40px rgba(255,214,0,0.3);
+  }
+  .curiosity-sub {
+    font-size: 0.9rem;
+    color: #8a7a4a;
+    font-style: italic;
+  }
+
+  /* ── Footer ── */
+  footer {
+    position: relative; z-index: 1;
+    text-align: center;
+    padding: 20px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.2);
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 680px) {
+    .compare-grid { grid-template-columns: 1fr; }
+    .section-card { padding: 28px 20px; }
+    .factbox { grid-template-columns: 1fr; }
+    .factbox .did-you { font-size: 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Stars -->
+<div id="stars"></div>
+
+<!-- Blobs -->
+<div class="blob" style="width:500px;height:500px;background:var(--green);top:-100px;left:-150px;--t:18s;--dx:60px;--dy:40px;"></div>
+<div class="blob" style="width:600px;height:600px;background:var(--cyan);top:40%;right:-200px;--t:22s;--dx:-80px;--dy:60px;"></div>
+<div class="blob" style="width:400px;height:400px;background:var(--orange);bottom:10%;left:20%;--t:15s;--dx:50px;--dy:-50px;"></div>
+<div class="blob" style="width:350px;height:350px;background:var(--purple);bottom:20%;right:10%;--t:20s;--dx:-40px;--dy:30px;"></div>
+
+<main>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="tag">Environment X · Vacation Enrichment 2026-27</div>
+    <h1>Life Processes:<br>The Big Picture</h1>
+    <p>How Nutrition, Respiration, Transportation & Excretion form one seamless, interdependent system in every living organism.</p>
+  </div>
+
+  <!-- ── SECTION 1 ── -->
+  <div class="section-card s1">
+    <div class="section-label">Section 01</div>
+    <div class="section-title">The Web of Life Processes</div>
+    <div class="web-container">
+      <svg viewBox="0 0 900 480" xmlns="http://www.w3.org/2000/svg" font-family="Nunito, sans-serif">
+        <defs>
+          <marker id="arr-g" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#00e676"/>
+          </marker>
+          <marker id="arr-c" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#00e5ff"/>
+          </marker>
+          <marker id="arr-o" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#ff6d00"/>
+          </marker>
+          <marker id="arr-p" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L8,3 z" fill="#f50057"/>
+          </marker>
+          <filter id="glow-g"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          <filter id="glow-c"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          <filter id="glow-o"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          <filter id="glow-p"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+
+        <!-- Central "LIFE" node -->
+        <circle cx="450" cy="240" r="56" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
+        <text x="450" y="234" text-anchor="middle" fill="white" font-size="13" font-weight="700" font-family="'Playfair Display',serif">LIVING</text>
+        <text x="450" y="252" text-anchor="middle" fill="white" font-size="13" font-weight="700" font-family="'Playfair Display',serif">ORGANISM</text>
+
+        <!-- NUTRITION node – top-left -->
+        <rect x="60" y="60" width="160" height="80" rx="16" fill="rgba(0,230,118,0.12)" stroke="#00e676" stroke-width="1.5" filter="url(#glow-g)"/>
+        <text x="140" y="96" text-anchor="middle" fill="#00e676" font-size="15" font-weight="700">🌿 NUTRITION</text>
+        <text x="140" y="116" text-anchor="middle" fill="#8affc8" font-size="10">Glucose · Minerals · Vitamins</text>
+
+        <!-- TRANSPORTATION node – top-right -->
+        <rect x="680" y="60" width="178" height="80" rx="16" fill="rgba(0,229,255,0.10)" stroke="#00e5ff" stroke-width="1.5" filter="url(#glow-c)"/>
+        <text x="769" y="96" text-anchor="middle" fill="#00e5ff" font-size="15" font-weight="700">🩸 TRANSPORT</text>
+        <text x="769" y="116" text-anchor="middle" fill="#80e8ff" font-size="10">Blood · Xylem · Phloem</text>
+
+        <!-- RESPIRATION node – bottom-left -->
+        <rect x="60" y="340" width="165" height="80" rx="16" fill="rgba(255,214,0,0.10)" stroke="#ffd600" stroke-width="1.5"/>
+        <text x="142" y="376" text-anchor="middle" fill="#ffd600" font-size="15" font-weight="700">⚡ RESPIRATION</text>
+        <text x="142" y="396" text-anchor="middle" fill="#ffe880" font-size="10">ATP · CO₂ · H₂O produced</text>
+
+        <!-- EXCRETION node – bottom-right -->
+        <rect x="680" y="340" width="165" height="80" rx="16" fill="rgba(245,0,87,0.10)" stroke="#f50057" stroke-width="1.5" filter="url(#glow-p)"/>
+        <text x="762" y="376" text-anchor="middle" fill="#f50057" font-size="15" font-weight="700">🚽 EXCRETION</text>
+        <text x="762" y="396" text-anchor="middle" fill="#ff80a8" font-size="10">CO₂ · Urea · Salts removed</text>
+
+        <!-- Arrows & labels -->
+        <!-- Nutrition → Transport -->
+        <path d="M220,100 Q450,20 680,100" fill="none" stroke="#00e676" stroke-width="1.8" stroke-dasharray="6,3" marker-end="url(#arr-g)"/>
+        <text x="450" y="44" text-anchor="middle" fill="#00e676" font-size="11" font-weight="600">Glucose &amp; nutrients carried →</text>
+
+        <!-- Transport → Respiration (right→bottom) -->
+        <path d="M769,140 Q860,240 762,340" fill="none" stroke="#00e5ff" stroke-width="1.8" stroke-dasharray="6,3" marker-end="url(#arr-c)"/>
+        <text x="876" y="250" text-anchor="middle" fill="#00e5ff" font-size="11" font-weight="600" transform="rotate(90 876 250)">Delivers O₂ &amp; glucose →</text>
+
+        <!-- Respiration → Excretion -->
+        <path d="M225,380 Q450,460 680,380" fill="none" stroke="#ffd600" stroke-width="1.8" stroke-dasharray="6,3" marker-end="url(#arr-o)"/>
+        <text x="450" y="462" text-anchor="middle" fill="#ffd600" font-size="11" font-weight="600">CO₂ &amp; metabolic waste →</text>
+
+        <!-- Excretion → Nutrition (feedback) -->
+        <path d="M680,380 Q460,480 140,420 Q60,360 140,140" fill="none" stroke="#f50057" stroke-width="1.5" stroke-dasharray="4,4" marker-end="url(#arr-p)"/>
+        <text x="34" y="280" text-anchor="middle" fill="#f50057" font-size="10" font-weight="600" transform="rotate(-90 34 280)">Mineral recycling ↺</text>
+
+        <!-- Nutrition → central -->
+        <path d="M220,100 L394,210" fill="none" stroke="rgba(0,230,118,0.35)" stroke-width="1" stroke-dasharray="3,4"/>
+        <!-- Transport → central -->
+        <path d="M680,100 L506,210" fill="none" stroke="rgba(0,229,255,0.35)" stroke-width="1" stroke-dasharray="3,4"/>
+        <!-- Respiration → central -->
+        <path d="M225,370 L394,270" fill="none" stroke="rgba(255,214,0,0.35)" stroke-width="1" stroke-dasharray="3,4"/>
+        <!-- Excretion → central -->
+        <path d="M680,370 L506,270" fill="none" stroke="rgba(245,0,87,0.35)" stroke-width="1" stroke-dasharray="3,4"/>
+
+        <!-- Centre labels -->
+        <text x="310" y="168" fill="#a8ffcc" font-size="9.5" font-weight="600">↙ supplies raw material</text>
+        <text x="520" y="168" fill="#80e8ff" font-size="9.5" font-weight="600">supplies O₂ ↘</text>
+        <text x="290" y="318" fill="#ffe880" font-size="9.5" font-weight="600">↗ releases energy</text>
+        <text x="510" y="318" fill="#ff80a8" font-size="9.5" font-weight="600">removes wastes ↗</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- ── SECTION 2 ── -->
+  <div class="section-card s2">
+    <div class="section-label">Section 02</div>
+    <div class="section-title">Autotrophic vs Heterotrophic Nutrition</div>
+    <div class="compare-grid">
+      <div class="compare-col auto">
+        <span class="emoji-big">🌿</span>
+        <h3>Autotrophic</h3>
+        <p style="font-size:0.78rem;opacity:0.6;margin-bottom:14px;">"Self-feeding"</p>
+        <div class="compare-row"><span class="key">Energy Source</span><span class="val">Sunlight (photosynthesis) or inorganic chemicals (chemosynthesis)</span></div>
+        <div class="compare-row"><span class="key">Site</span><span class="val">Chloroplasts in mesophyll cells (plants); cell membrane (bacteria)</span></div>
+        <div class="compare-row"><span class="key">Input</span><span class="val">CO₂ + H₂O → Glucose + O₂</span></div>
+        <div class="compare-row"><span class="key">Digestion?</span><span class="val">No digestion needed – synthesise own organic molecules</span></div>
+        <div class="compare-row"><span class="key">Examples</span><span class="val">Green plants 🌱, Algae, Cyanobacteria, Euglena, Nitrifying bacteria</span></div>
+        <div class="compare-row"><span class="key">Kingdom</span><span class="val">Plantae, Protista, Monera (some)</span></div>
+      </div>
+      <div class="compare-col hetero">
+        <span class="emoji-big">🦁</span>
+        <h3>Heterotrophic</h3>
+        <p style="font-size:0.78rem;opacity:0.6;margin-bottom:14px;">"Other-feeding"</p>
+        <div class="compare-row"><span class="key">Energy Source</span><span class="val">Pre-formed organic molecules (carbohydrates, proteins, fats) from other organisms</span></div>
+        <div class="compare-row"><span class="key">Site</span><span class="val">Gut / alimentary canal; extracellular (fungi) or intracellular (Amoeba)</span></div>
+        <div class="compare-row"><span class="key">Input</span><span class="val">Ingested food → digested → absorbed glucose</span></div>
+        <div class="compare-row"><span class="key">Digestion?</span><span class="val">Essential – complex molecules broken to monomers by enzymes</span></div>
+        <div class="compare-row"><span class="key">Examples</span><span class="val">Humans 🧑, Lions, Mushrooms 🍄, Tapeworms, Amoeba</span></div>
+        <div class="compare-row"><span class="key">Kingdom</span><span class="val">Animalia, Fungi, Protista (some), Monera (some)</span></div>
+      </div>
+    </div>
+    <div class="hetero-question">
+      <h4>❓ Could a heterotroph survive in a world without autotrophs?</h4>
+      <p>No — heterotrophs cannot synthesise organic molecules from inorganic raw materials, so they depend entirely on consuming other organisms. <span class="highlight">Without autotrophs at the base of every food chain, there would be no primary production of organic matter.</span> All heterotrophic life — from decomposers to apex predators — would collapse within weeks as food sources were exhausted and the oxygen supply (largely produced by photosynthesis) dwindled.</p>
+    </div>
+  </div>
+
+  <!-- ── SECTION 3 ── -->
+  <div class="section-card s3">
+    <div class="section-label">Section 03</div>
+    <div class="section-title">The "What If?" Domino Effect — <em style="color:var(--orange);font-style:normal;">Transportation Fails in a Plant</em></div>
+    <div class="domino-chain">
+
+      <div class="domino-wrap">
+        <div class="domino domino-0">
+          <div class="d-num">DOMINO 01</div>
+          <span class="d-icon">💔</span>
+          <div class="d-title" style="color:#ff9a4a;">Xylem & Phloem Blocked</div>
+          <div class="d-text">Vascular tissue destroyed. Water & nutrients cannot move from roots to leaves; glucose cannot leave leaves.</div>
+        </div>
+        <div class="domino-arrow">▶▶</div>
+      </div>
+
+      <div class="domino-wrap">
+        <div class="domino domino-1">
+          <div class="d-num">DOMINO 02</div>
+          <span class="d-icon">🌿💀</span>
+          <div class="d-title" style="color:#ffd600;">Nutrition Collapses</div>
+          <div class="d-text">Leaves lack water → stomata close → CO₂ intake stops → photosynthesis halts → no new glucose produced.</div>
+        </div>
+        <div class="domino-arrow">▶▶</div>
+      </div>
+
+      <div class="domino-wrap">
+        <div class="domino domino-2">
+          <div class="d-num">DOMINO 03</div>
+          <span class="d-icon">⚡❌</span>
+          <div class="d-title" style="color:#00e676;">Respiration Starves</div>
+          <div class="d-text">Cells receive no glucose or O₂. ATP production falls to near zero. All energy-dependent processes shut down.</div>
+        </div>
+        <div class="domino-arrow">▶▶</div>
+      </div>
+
+      <div class="domino-wrap">
+        <div class="domino domino-3">
+          <div class="d-num">DOMINO 04</div>
+          <span class="d-icon">🚽🛑</span>
+          <div class="d-title" style="color:#00e5ff;">Excretion Fails</div>
+          <div class="d-text">No energy for active transport of waste. CO₂ & urea accumulate inside cells, becoming toxic. pH drops dangerously.</div>
+        </div>
+        <div class="domino-arrow">▶▶</div>
+      </div>
+
+      <div class="domino-wrap">
+        <div class="domino domino-4">
+          <div class="d-num">DOMINO 05</div>
+          <span class="d-icon">☠️</span>
+          <div class="d-title" style="color:#d500f9;">Cell Death</div>
+          <div class="d-text">Toxic waste accumulation + zero ATP triggers apoptosis. Cells lyse. Tissues necrotise from root tips upward.</div>
+        </div>
+        <div class="domino-arrow">▶▶</div>
+      </div>
+
+      <div class="domino-wrap">
+        <div class="domino domino-5">
+          <div class="d-num">FINALE</div>
+          <span class="d-icon">🪦</span>
+          <div class="d-title" style="color:#f50057;">Organism Death</div>
+          <div class="d-text">Complete systemic failure. The plant dies within days. Decomposers break it down — nutrients return to soil.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── SECTION 4 ── -->
+  <div class="section-card s4">
+    <div class="section-label">Section 04</div>
+    <div class="section-title">Real-World Connection</div>
+    <div class="factbox">
+      <div class="did-you">DYK?</div>
+      <div>
+        <h4>🩺 Dialysis Machines — Engineering Kidney Excretion</h4>
+        <p>When kidneys fail due to conditions like <span class="highlight">chronic renal disease</span>, the body can no longer excrete urea, excess salts, or water — waste accumulates in the blood and becomes life-threatening within days. Haemodialysis machines replicate the kidney's filtration function by pumping blood through a <span class="highlight">semi-permeable membrane</span> bathed in dialysate fluid. Urea and toxins diffuse out (concentration gradient — just like in real nephrons), while red blood cells and proteins remain. Patients attend 3–4 hour sessions three times a week — a vivid reminder that <span class="highlight">excretion is not optional</span>; it is as vital as breathing. Engineers are now developing <span class="highlight">wearable artificial kidneys</span> that mimic tubular reabsorption, potentially freeing patients from clinic visits entirely.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SECTION 5 ── -->
+  <div class="section-card s5">
+    <div class="section-label">Section 05 · Curiosity Question</div>
+    <div class="section-title">Something I genuinely wonder about…</div>
+    <div class="curiosity-q">
+      "If every life process ultimately exists to maintain cellular energy — could scientists engineer a cell that bypasses food entirely and runs directly on electrical energy, like a living battery?"
+    </div>
+    <p class="curiosity-sub">— An open invitation to wonder. What do <em>you</em> think is possible?</p>
+  </div>
+
+</main>
+
+<footer>LIFE PROCESSES · ENVIRONMENT X · 2026-27 · BIOLOGY ENRICHMENT POSTER</footer>
+
+<script>
+  // Generate stars
+  const stars = document.getElementById('stars');
+  for (let i = 0; i < 180; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 2.5 + 0.5;
+    s.style.cssText = `
+      width:${size}px; height:${size}px;
+      top:${Math.random()*100}%; left:${Math.random()*100}%;
+      --d:${(Math.random()*3+2).toFixed(1)}s;
+      animation-delay:${(Math.random()*4).toFixed(1)}s;
+    `;
+    stars.appendChild(s);
+  }
+
+  // Stagger card animations
+  document.querySelectorAll('.section-card').forEach((el, i) => {
+    el.style.animationDelay = `${i * 0.12}s`;
+  });
+</script>
+</body>
+</html>
